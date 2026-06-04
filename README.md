@@ -1,53 +1,60 @@
 # whisper-transcribe
 
-Transcreve áudios (WhatsApp `.opus` e outros formatos) para `.txt` usando a API da OpenAI (modelo `gpt-4o-transcribe`).
+Transcribe audio files, including WhatsApp `.opus` files, to `.txt` using the OpenAI API with the `gpt-4o-transcribe` model.
 
-Aceita um arquivo único ou uma pasta inteira. Pula arquivos que já têm `.txt` gerado.
+The script accepts either a single file or an entire folder. When processing a folder, it skips audio files that already have a matching `.txt` transcript.
 
-## Pré-requisitos
+## Requirements
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/)
-- [ffmpeg](https://ffmpeg.org/) instalado (`brew install ffmpeg`)
-- Chave de API da OpenAI
+- [ffmpeg](https://ffmpeg.org/) installed (`brew install ffmpeg`)
+- An OpenAI API key
 
-## Instalação
+## Installation
 
 ```bash
 uv sync
 ```
 
-Crie um arquivo `.env` na raiz do projeto:
+Create a `.env` file in the project root:
 
-```
+```env
 OPENAI_API_KEY=sk-...
 ```
 
-## Uso
+## Troubleshooting
+
+If the script gets stuck because the virtual environment or dependencies are in a bad state, rebuild them from the project root:
 
 ```bash
-# Transcrever um arquivo
-uv run main.py audio/mensagem.opus
+rm -rf .venv && uv sync && uv add openai python-dotenv
+```
 
-# Transcrever todos os áudios de uma pasta
+## Usage
+
+```bash
+# Transcribe one file
+uv run main.py audio/message.opus
+
+# Transcribe every supported audio file in a folder
 uv run main.py audio/
 ```
 
-O `.txt` é salvo no mesmo local do áudio original, com o mesmo nome.
+Each `.txt` file is saved next to the original audio file with the same base name.
 
-## Formatos suportados
+## Supported Formats
 
 `.opus` · `.ogg` · `.mp3` · `.m4a` · `.wav` · `.mp4` · `.webm` · `.flac`
 
-## Custo
+## Cost
 
-O script usa `gpt-4o-transcribe` por padrão. Para reduzir custo pela metade, troque a constante `MODELO` em [main.py](main.py):
+The script uses `gpt-4o-transcribe` by default. To reduce transcription cost, change the `MODELO` constant in [main.py](main.py):
 
 ```python
 MODELO = "gpt-4o-mini-transcribe"
 ```
 
-## Idioma
+## Language
 
-Transcrição fixada em português (`language="pt"`). Para outros idiomas, altere o parâmetro `language` na função `transcrever()` em [main.py](main.py).
-# openai-whisper
+Transcription is currently fixed to Portuguese with `language="pt"`. To use another language, update the `language` parameter in the `transcrever()` function in [main.py](main.py).
